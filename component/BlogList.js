@@ -3,7 +3,7 @@ import BlogRow from './BlogRow'
 import {Grid, Paper, Typography, ButtonBase} from '@material-ui/core';
 
 const BlogList = ({blog}) => {
-    console.info(blogListStyle);
+    // console.info(blog)
     return (
         <div>
             {blog.map((i) => (<BlogRow key={i.id} blogItem={i} />))}

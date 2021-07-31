@@ -2,7 +2,7 @@
 import blogListStyle from '../styles/BlogList.module.scss'
 import {Grid, Paper, Typography, ButtonBase, Link} from '@material-ui/core';
 const BlogRow = ({blogItem}) => {
-    console.info('@@@@', blogItem)
+    // console.info('@@@@', blogItem)
     return (
         <div className={blogListStyle.blog_list}>
             {/* <Link href="/blog/[id]" as ={`blog/${blogItem.id}`}>
@@ -31,17 +31,17 @@ const BlogRow = ({blogItem}) => {
                                 </Link>
                             </Typography>
                             <Typography variant="body2" gutterBottom>
-                                Full resolution 1920x1080 • JPEG
+                                {blogItem.body}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary">
+                            {/* <Typography variant="body2" color="textSecondary">
                                 ID: 1030114
-                            </Typography>
+                            </Typography> */}
                             </Grid>
-                            <Grid item>
+                            {/* <Grid item>
                             <Typography variant="body2" style={{ cursor: 'pointer' }}>
                                 Remove
                             </Typography>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                         {/* <Grid item>
                             <Typography variant="subtitle1">$19.00</Typography>
