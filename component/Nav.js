@@ -1,4 +1,4 @@
-import navStyles from '../styles/Nav.module.css'
+import navStyles from '../styles/Nav.module.scss'
 import { Link, AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 const Nav = () => {

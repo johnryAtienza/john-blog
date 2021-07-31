@@ -1,0 +1,19 @@
+.blog-list {
+    flex-grow: 1;
+    .paper{
+        padding: 2px;
+        margin: auto;
+        max-width: 500px;
+        .image{
+            width: 128px;
+            height: 128px;
+            .img{
+                margin: auto;
+                display: block;
+                max-width: 100%;
+                max-height: 100%;
+            }
+        }
+    }
+    
+}
