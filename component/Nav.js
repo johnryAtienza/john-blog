@@ -7,11 +7,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 const Nav = () => {
 
     const [open, setOpen] = React.useState(false);
+    const [openRegister, setOpenRegister] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
     const [loadingLinear, setLoadingLinear] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isLogin, setIsLogin] = React.useState(null);
     const [openSnack, setOpenSnack] = React.useState(false);
+    const [msg, setMsg] = React.useState("Invalid Username or password");
     
     const handleClick = (event) => {
         // this.setState()
@@ -21,6 +23,8 @@ const Nav = () => {
     React.useEffect(() => {
     
         validateLogin();
+
+        // doRegister();
        
        }, [])
 
@@ -34,6 +38,14 @@ const Nav = () => {
     
     const handleCloseModal = () => {
         setOpen(false);
+    };
+
+    const handleOpenModalRegister = () => {
+        setOpenRegister(true);
+      };
+    
+    const handleCloseModalRegister = () => {
+        setOpenRegister(false);
     };
 
     const validateLogin = async () => {
@@ -60,12 +72,14 @@ const Nav = () => {
 
         let result =  await res.json();
         //   console.info("login", result);
-        if (result.message) {
+        if (result.login) {
+            setMsg(result.message);
             validateLogin()
             handleCloseModal();
         } else if (result.error){
-            setOpenSnack(true)
+            setMsg(result.error);
         }
+            setOpenSnack(true)
             setLoading(false);
 
       }
@@ -77,10 +91,33 @@ const Nav = () => {
         const res = await fetch("../api/logout")
         const isLogout = await res.json()
         console.info(isLogout.logout)
+
+        setMsg('Successfully logged out.');
+        setOpenSnack(true)
         setIsLogin(false)
         setLoadingLinear(false)
       }
 
+      const doRegister = async event => {
+        setLoading(true);
+        // setLoadingLinear(true)
+        // event.preventDefault()
+        event.preventDefault()
+        const data = {id: null, fullname: event.target.fname.value, email: event.target.email.value, password: event.target.password.value };
+        const res = await fetch("../api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({data:data}),
+          })
+        const isRegistered = await res.json()
+        console.info(isRegistered)
+        if (isRegistered.registered) {
+            setMsg(isRegistered.message)
+        }
+        setOpenSnack(true)
+        setLoading(false)
+        handleCloseModalRegister(false)
+      }
 
     return (
 
@@ -93,7 +130,7 @@ const Nav = () => {
                 open={openSnack}
                 autoHideDuration={6000}
                 onClose={() => setOpenSnack(false)}
-                message="Invalid Username or password"
+                message={msg}
                 key='Top Center'
             >
                 
@@ -115,7 +152,7 @@ const Nav = () => {
                     <Typography variant="h6" className={navStyles.title}>
                     Blog
                     </Typography>
-                    {isLogin ? <Button color="inherit" onClick={doLogout}>Logout</Button> : <Button color="inherit" onClick={handleOpenModal}>Login</Button> }
+                    {isLogin ? <Button color="inherit" onClick={doLogout}>Logout</Button> : <><Button color="inherit" onClick={handleOpenModalRegister}>Register</Button><Button color="inherit" onClick={handleOpenModal}>Login</Button></> }
                 </Toolbar>
             </AppBar>
             <Modal
@@ -132,13 +169,13 @@ const Nav = () => {
             >
                 <Fade in={open}>
                 <div className={navStyles.paper}>
-                
+                    <h3>Login</h3>
                     <form noValidate autoComplete="off" onSubmit={loginUser}>
                         <div className={navStyles.login_field}>
                             <TextField
                                 required
                                 id="outlined-required"
-                                label="Username"
+                                label="Email"
                                 variant="outlined"
                                 name="username"
                                 />
@@ -158,6 +195,61 @@ const Nav = () => {
                         <div>
                             <Button type="submit" disabled={loading} variant="contained" color="primary" className={navStyles.submit_button} disableElevation>
                                 {loading ? <CircularProgress size={24}/> : 'Login'}
+                            </Button>
+                        </div>
+                    </form>
+                </div>
+                </Fade>
+            </Modal>
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={navStyles.modal}
+                open={openRegister}
+                onClose={handleCloseModalRegister}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                timeout: 500,
+                }}
+            >
+                <Fade in={openRegister}>
+                <div className={navStyles.paper}>
+                    <h3>Register</h3>
+                    <form noValidate autoComplete="off" onSubmit={doRegister}>
+                        <div className={navStyles.login_field}>
+                            <TextField
+                                required
+                                id="outlined-fullname-required"
+                                label="Full Name"
+                                variant="outlined"
+                                name="fname"
+                                />
+                        </div>
+                        <div className={navStyles.login_field}>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Email"
+                                variant="outlined"
+                                name="email"
+                                />
+                        </div>
+                        
+                        <div className={navStyles.login_field}>
+                            <TextField
+                                required
+                                id="outlined-password-input"
+                                label="Password"
+                                type="password"
+                                autoComplete="current-password"
+                                variant="outlined"
+                                name="password"
+                                />
+                        </div>
+                        <div>
+                            <Button type="submit" disabled={loading} variant="contained" color="primary" className={navStyles.submit_button} disableElevation>
+                                {loading ? <CircularProgress size={24}/> : 'Register'}
                             </Button>
                         </div>
                     </form>

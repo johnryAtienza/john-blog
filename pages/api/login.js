@@ -10,7 +10,7 @@ async function handler(req, res) {
         // get user from database then:
         req.session.set("user", u);
         await req.session.save();
-        res.send({message: "Logged in"});
+        res.send({message: "Successfully Logged in", login: true});
     } else {
         res.send({error: "Invalid Username of Password"});
     }
