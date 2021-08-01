@@ -3,39 +3,22 @@ import React from 'react'
 
 const register = async (req, res) => {
 
-    const reg = async () => {
-        // const adapter = new JSONFile('https://fake-blog-server.herokuapp.com/post')
-        // const db = new Low(adapter)
-        
-        // // Read data from JSON file, this will set db.data content
-        // console.info(await db.read());
-        const obj = {
-            id: null,
-            fullname: "CJ",
-            email: "cj@gmail.com",
-            password: "123"
-          }
-        const r = await fetch('https://fake-blog-server.herokuapp.com/users', {
-            method: 'POST',
-            headers: {
-            //     "Content-Type": "application/x-www-form-urlencoded",
-            //     // "Content-Type": "multipart/form-data",
-            'Content-Type': 'application/json'
-            },
-            body:  JSON.stringify(obj) ,
-        })
-
-        console.info('Save data: ',await r.json())
-    }
-    const remover = async () => {
-        const r = await fetch('https://fake-blog-server.herokuapp.com/users/3', {
+   
+    const remover = async (req, res) => {
+        const r = await fetch('https://fake-blog-server.herokuapp.com/users/10', {
             method: 'DELETE',
+            headers: {
+                //     "Content-Type": "application/x-www-form-urlencoded",
+                //     // "Content-Type": "multipart/form-data",
+                'Content-Type': 'application/json'
+                }
         })
 
         console.info('Save data: ',await r.json())
+        res.send({message: 'User has been deleted.', registered: true})
     }
         // reg()
-        // remover();return
+        // remover(req, res);return
 
     const { data } = await req.body;
     const r = await fetch('https://fake-blog-server.herokuapp.com/users', {

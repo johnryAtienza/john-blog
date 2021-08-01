@@ -38,6 +38,7 @@ const Nav = () => {
     
     const handleCloseModal = () => {
         setOpen(false);
+        setLoading(false);
     };
 
     const handleOpenModalRegister = () => {
@@ -46,6 +47,7 @@ const Nav = () => {
     
     const handleCloseModalRegister = () => {
         setOpenRegister(false);
+        setLoading(false);
     };
 
     const validateLogin = async () => {
@@ -63,7 +65,12 @@ const Nav = () => {
         setLoading(true);
         event.preventDefault()
         const credential = {email: event.target.username.value, password: event.target.password.value };
-
+        if (!credential.password || !credential.email) {
+            setMsg("Please input username and password.")
+            setOpenSnack(true)
+            setLoading(false);
+            return;
+        }
         const res = await fetch("../api/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -104,6 +111,14 @@ const Nav = () => {
         // event.preventDefault()
         event.preventDefault()
         const data = {id: null, fullname: event.target.fname.value, email: event.target.email.value, password: event.target.password.value };
+
+        if (!data.fullname || !data.email || !data.password) {
+            setMsg("Please fillout all the fields.");
+            setOpenSnack(true);
+            setLoading(false);
+            return;
+        }
+
         const res = await fetch("../api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
