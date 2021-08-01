@@ -1,16 +1,14 @@
+import React, {useState, useEffect} from 'react';
 import Meta from '../component/Meta'
 import BlogList from '../component/BlogList'
 import Image from 'next/image'
 
-export default function Blog({blog}) {
-  // console.log(blog, photos);
-
-//   console.info('Blog',blog);
+export default function Blog({blog, isLogin}) {
   return (
     <div>
       <Meta />
       <h1>Blog List</h1>
-      <BlogList blog={blog}/>
+      <BlogList isLogin={isLogin} blog={blog}/>
     </div>
   )
 }

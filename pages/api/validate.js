@@ -1,7 +1,7 @@
 import { withIronSession } from "next-iron-session";
 
 function handler(req, res, session) {
-  const user = req.session.get("user");
+  const user = req.session.get("user") || {isLoggedIn: false};
   // console.info('user',user)
   res.send({ user });
 }

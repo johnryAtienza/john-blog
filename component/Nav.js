@@ -1,32 +1,24 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { withIronSession } from "next-iron-session";
 import navStyles from '../styles/Nav.module.scss'
 import { Link, AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Modal, Backdrop, Fade, TextField, Snackbar, CircularProgress, LinearProgress } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 
-const Nav = () => {
+const Nav = ({validationChecker, isLogin}) => {
 
-    const [open, setOpen] = React.useState(false);
-    const [openRegister, setOpenRegister] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
-    const [loadingLinear, setLoadingLinear] = React.useState(false);
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [isLogin, setIsLogin] = React.useState(null);
-    const [openSnack, setOpenSnack] = React.useState(false);
-    const [msg, setMsg] = React.useState("Invalid Username or password");
+    const [open, setOpen] = useState(false);
+    const [openRegister, setOpenRegister] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [loadingLinear, setLoadingLinear] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    // const [isLogin, setIsLogin] = useState(null);
+    const [openSnack, setOpenSnack] = useState(false);
+    const [msg, setMsg] = useState("Invalid Username or password");
     
     const handleClick = (event) => {
         // this.setState()
         setAnchorEl(event.currentTarget);
     };
-
-    React.useEffect(() => {
-    
-        validateLogin();
-
-        // doRegister();
-       
-       }, [])
 
     const handleClose = () => {
         setAnchorEl(false);
@@ -50,18 +42,8 @@ const Nav = () => {
         setLoading(false);
     };
 
-    const validateLogin = async () => {
-        // ReactGA.init()
-        const res = await fetch("../api/validate")
-        const validate = await res.json()
-        console.info('valid', validate)
-        if (validate.user) {
-            console.info("is",validate.user.isLoggedIn)
-            setIsLogin(validate.user.isLoggedIn)
-        }
-        // setLoading(false);
-    }
     const loginUser = async event => {
+        validationChecker();
         setLoading(true);
         event.preventDefault()
         const credential = {email: event.target.username.value, password: event.target.password.value };
@@ -81,7 +63,9 @@ const Nav = () => {
         //   console.info("login", result);
         if (result.login) {
             setMsg(result.message);
-            validateLogin()
+            // setIsLogin(true)
+            // validateLogin()
+            validationChecker();
             handleCloseModal();
         } else if (result.error){
             setMsg(result.error);
@@ -101,7 +85,9 @@ const Nav = () => {
 
         setMsg('Successfully logged out.');
         setOpenSnack(true)
-        setIsLogin(false)
+        // setIsLogin(false)
+
+        validationChecker();
         setLoadingLinear(false)
       }
 
