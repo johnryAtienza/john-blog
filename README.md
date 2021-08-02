@@ -38,3 +38,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 HEROKU server
 [https://fake-blog-server.herokuapp.com/](https://fake-blog-server.herokuapp.com/) | [https://fake-blog-server.herokuapp.com/](https://git.heroku.com/fake-blog-server.git)
 
+## Authentication
+
+[https://github.com/vvo/next-iron-session](https://github.com/vvo/next-iron-session)
+
+## Design
+
+MATERIAL-UI
+React components for faster and easier web development. Build your own design system, or start with Material Design.
+[https://material-ui.com/](https://material-ui.com/)
