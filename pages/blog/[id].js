@@ -1,6 +1,5 @@
 import singleStyle from '../../styles/Single.module.scss'
 import {ImageList, ImageListItem, ImageListItemBar, ListSubheader, IconButton, Link} from '@material-ui/core';
-import InfoIcon from '@material-ui/icons/Info';
 export const getServerSideProps = async (context) => {
     const res = await fetch(`https://fake-blog-server.herokuapp.com/blog/${context.params.id}`);
     const details = await res.json();

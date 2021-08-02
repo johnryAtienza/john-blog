@@ -1,6 +1,4 @@
 import Meta from '../component/Meta'
-import BlogList from '../component/BlogList'
-import Image from 'next/image'
 
 export default function Home() {
   return (
