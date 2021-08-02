@@ -32,6 +32,7 @@ export const getStaticProps = async () => {
     blog.map((row) => {
         let g = gallery.filter(r => row.id === r.blogId);
         // console.info('Gallery', g)
+        row.galleryDetails = JSON.parse(JSON.stringify(g[0] || {}));
         g.map(i => {let p = photos.filter(r => i.id === r.galleryId); i.photos = p});
         row.gallery = g;
     });

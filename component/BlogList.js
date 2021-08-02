@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react';
 import blogListStyle from '../styles/BlogList.module.scss'
 import BlogRow from './BlogRow'
-import {Accordion, AccordionSummary, Typography, AccordionActions, AccordionDetails, Backdrop, CircularProgress, Modal, Fade, TextField, Button, Snackbar, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
+import {Accordion, AccordionSummary, Typography, AccordionActions, AccordionDetails, Backdrop, CircularProgress, Modal, Fade, TextField, Button, Snackbar, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ImageList, ImageListItem, ImageListItemBar, IconButton} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Router from 'next/router';
 
 const BlogList = ({blog, isLogin, refreshData}) => {
     const [showEdit, setShowEdit] = useState(false);
     const [loading, setLoading] = useState(false);
     const [details, setDetails] = useState({gallery:[]});
+    const [galleryDetails, setGalleryDetails] = useState({});
     const [openSnack, setOpenSnack] = useState(false);
     const [msg, setMsg] = useState("Invalid Username or password");
     const [open, setOpen] = useState(false);
+    const [openPhoto, setOpenPhoto] = useState(false);
     const [expanded, setExpanded] = useState(false);
 
     useEffect(() => {
@@ -29,6 +32,15 @@ const BlogList = ({blog, isLogin, refreshData}) => {
       setOpen(false);
     };
 
+    const handleClickOpenPhoto = (d) => {
+        setGalleryDetails(d)
+      setOpenPhoto(true);
+    };
+  
+    const handleClosePhoto = () => {
+      setOpenPhoto(false);
+    };
+
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
       };
@@ -36,7 +48,7 @@ const BlogList = ({blog, isLogin, refreshData}) => {
     const saveGallery = async (event) => {
         setLoading(true);
         event.preventDefault();
-        const p = {id: null, userId: details.userId, blogId: details.blogId, title: event.target.galleryName.value};
+        const p = {id: null, userId: details.userId, blogId: details.id, title: event.target.galleryName.value};
         const res = await fetch("../api/gallery", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -46,7 +58,46 @@ const BlogList = ({blog, isLogin, refreshData}) => {
         let result =  await res.json();
           console.info(result)
         if(result.added) {
-            setOpen(false);
+            handleClose();
+            // TODO: update list
+            refreshData();
+
+        }
+        setLoading(false);
+    }
+
+    const savePhoto = async event => {
+        setLoading(true);
+        event.preventDefault();
+        const p = {id: null, galleryId: galleryDetails.id, title: event.target.title.value, url: event.target.url.value, thumbnailUrl: event.target.thumbnail.value};
+        const res = await fetch("../api/photo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({data:p}),
+          })
+
+        let result =  await res.json();
+          console.info(result)
+        if(result.added) {
+            handleClosePhoto();
+
+            setMsg(result.message);
+            setOpenSnack(true)
+
+            const p = {get:true, galleryId: galleryDetails.id};
+            const res = await fetch("../api/photo", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({data:p}),
+              })
+    
+            let response =  await res.json();
+
+            let obj = JSON.parse(JSON.stringify(details || {}));
+            obj.gallery[0].photos = response;
+
+            setDetails(obj);
+            //   console.info('List of photos:',response)
             // TODO: update list
             refreshData();
 
@@ -64,6 +115,34 @@ const BlogList = ({blog, isLogin, refreshData}) => {
 
     //     let result =  await res.json();
     // }
+
+    const removePhoto = async (id) => {
+        setLoading(true);
+        const p = {id:id, remove: true}
+        const res = await fetch("../api/photo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({data:p}),
+          })
+
+        let result =  await res.json();
+        if(result.deleted) {
+            let obj = JSON.parse(JSON.stringify(details || {}));
+            let photoList = obj.gallery[0].photos;
+            // console.info("BEFORE updateds: " + id,obj)
+            obj.gallery[0].photos = photoList.filter(r => (r.id != id))
+            // console.info("updateds: ",obj)
+
+            setMsg(result.message);
+            setOpenSnack(true)
+
+            setDetails(obj);
+            // TODO: update list
+            refreshData();
+        }
+
+        setLoading(false);
+    }
 
     const showEditModal = () => {
         setShowEdit(true)
@@ -88,14 +167,14 @@ const BlogList = ({blog, isLogin, refreshData}) => {
             refreshData();
 
             hideEditModal();
-            setDetails({});
+            setDetails({gallery:[]});
             setMsg(result.message);
             setOpenSnack(true)
         }
         setLoading(false);
     }
     const viewDetails = (d) => {
-        console.info(d);
+        // console.info(d);
         setDetails(d)
         showEditModal();
     }
@@ -154,6 +233,7 @@ const BlogList = ({blog, isLogin, refreshData}) => {
                                 />
                         </div>
                         <Divider variant="middle" />
+                                    <h2>Gallery</h2>
                         {!details.gallery.length && <Button variant="outlined" color="primary" onClick={handleClickOpen} className={blogListStyle.gallery_button}>Add Gallery</Button>}
                         <br/>
                         {details.gallery.map( (gallery) => (
@@ -165,17 +245,33 @@ const BlogList = ({blog, isLogin, refreshData}) => {
                                 >
                                 <Typography >{gallery.title}</Typography>
                                 </AccordionSummary>
-                                <AccordionDetails>
-                                <Typography>
+                                <AccordionDetails  style={{maxWidth: 500, maxHeight:230, overflowX:'scroll'}}>
+                                {/* <Typography>
                                     Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
                                     maximus est, id dignissim quam.
-                                </Typography>
+                                </Typography> */}
+                                <ImageList  cols={2} >
+                                    {gallery.photos.map((item) => (
+                                    <ImageListItem key={item.id} style={{maxWidth: 300}}>
+                                        <img src={item.thumbnailUrl} alt={item.title}/>
+                                        <ImageListItemBar
+                                        title={item.title}
+                                        
+                                        actionIcon={
+                                            <IconButton aria-label={`remove ${item.title}`} onClick={() => {removePhoto(item.id)}}>
+                                            <DeleteIcon />
+                                            </IconButton>
+                                        }
+                                        />
+                                    </ImageListItem>
+                                    ))}
+                                </ImageList>
                                 </AccordionDetails>
                                 <Divider />
-                                {/* <AccordionActions>
-                                    <Button size="small" onClick={removeGallery}><DeleteIcon/></Button>
+                                <AccordionActions>
+                                    <Button size="small" onClick={() => {handleClickOpenPhoto(details.galleryDetails)}}><AddCircleOutlineIcon/></Button>
                             
-                                </AccordionActions> */}
+                                </AccordionActions>
                             </Accordion>
                         ))}
                         {/* <div className={blogListStyle.login_field}>
@@ -218,6 +314,48 @@ const BlogList = ({blog, isLogin, refreshData}) => {
                     </DialogContent>
                     <DialogActions>
                     <Button onClick={handleClose} disabled={loading} color="primary">
+                        Cancel
+                    </Button>
+                    <Button type="submit" disabled={loading} color="primary">
+                        {loading ? <CircularProgress size={24}/> : 'Save'}
+                    </Button>
+                    </DialogActions>
+                </form>
+            </Dialog>
+            <Dialog open={openPhoto} onClose={handleClosePhoto} aria-labelledby="form-dialog-title">
+                <form noValidate autoComplete="off" onSubmit={savePhoto}>
+                <DialogTitle id="form-dialog-title">Photo</DialogTitle>
+                    <DialogContent>
+                    <DialogContentText>
+                        Please input photo details below.
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="title"
+                        label="Title"
+                        name="title"
+                        fullWidth
+                    />
+                    <TextField
+                        
+                        margin="dense"
+                        id="url"
+                        label="URL"
+                        name="url"
+                        fullWidth
+                    />
+                    <TextField
+                        
+                        margin="dense"
+                        id="thumbnail"
+                        label="Thumbnail URL"
+                        name="thumbnail"
+                        fullWidth
+                    />
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={handleClosePhoto} disabled={loading} color="primary">
                         Cancel
                     </Button>
                     <Button type="submit" disabled={loading} color="primary">

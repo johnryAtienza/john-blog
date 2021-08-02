@@ -13,7 +13,7 @@ const BlogRow = ({blogItem, isLogin, viewDetails}) => {
                 <Grid container spacing={2}>
                     <Grid item>
                         <ButtonBase className={blogListStyle.image}>
-                            <img className={blogListStyle.img} alt="complex" src={blogItem.gallery[0] && blogItem.gallery[0].photos ? blogItem.gallery[0].photos[0].thumbnailUrl : noImage} />
+                            <img className={blogListStyle.img} alt="complex" src={blogItem.gallery[0] && blogItem.gallery[0].photos[0] ? blogItem.gallery[0].photos[0].thumbnailUrl : noImage} />
                         </ButtonBase>
                     </Grid>
                     <Grid item xs={12} sm container>
