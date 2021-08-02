@@ -36,7 +36,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## Database
 
 HEROKU server
-[https://fake-blog-server.herokuapp.com/](https://fake-blog-server.herokuapp.com/) | [https://fake-blog-server.herokuapp.com/](https://git.heroku.com/fake-blog-server.git)
+[https://fake-blog-server.herokuapp.com/](https://fake-blog-server.herokuapp.com/) | [https://git.heroku.com/fake-blog-server.git](https://git.heroku.com/fake-blog-server.git)
 
 ## Authentication
 
