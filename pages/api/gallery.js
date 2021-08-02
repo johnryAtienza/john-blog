@@ -5,7 +5,7 @@ const gallery = async (req, res) => {
 
    
     const remover = async (req, res) => {
-        const r = await fetch('https://fake-blog-server.herokuapp.com/blog/10', {
+        const r = await fetch('https://fake-blog-server.herokuapp.com/gallery/3', {
             method: 'DELETE',
             headers: {
                 //     "Content-Type": "application/x-www-form-urlencoded",
@@ -25,9 +25,12 @@ const gallery = async (req, res) => {
 
     const { data } = await req.body;
 // console.info("data:",data)
-
-    
-    if (data.remove) {
+    if (data.get) {
+        // TODO: if create blog
+        const r = await fetch('https://fake-blog-server.herokuapp.com/gallery?blogId=' + data.blogId)
+        const d = await r.json()
+        res.send(d)
+    } else if (data.remove) {
         // TODO: if create blog
         const r = await fetch('https://fake-blog-server.herokuapp.com/gallery/' + data.id, {
             method: 'DELETE',

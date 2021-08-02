@@ -56,9 +56,26 @@ const BlogList = ({blog, isLogin, refreshData}) => {
           })
 
         let result =  await res.json();
-          console.info(result)
+        //   console.info(result)
         if(result.added) {
             handleClose();
+
+            const p = {get:true, blogId: details.id};
+            const resp = await fetch("../api/gallery", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({data:p}),
+              })
+    
+            let response =  await resp.json();
+
+            let obj = JSON.parse(JSON.stringify(details || {}));
+            let o = JSON.parse(JSON.stringify(response || {}));
+            o[0].photos = []
+            obj.gallery = o;
+            obj.galleryDetails = response[0];
+            setGalleryDetails(obj.galleryDetails)
+            setDetails(obj);
             // TODO: update list
             refreshData();
 
@@ -174,7 +191,7 @@ const BlogList = ({blog, isLogin, refreshData}) => {
         setLoading(false);
     }
     const viewDetails = (d) => {
-        // console.info(d);
+        console.info(d);
         setDetails(d)
         showEditModal();
     }
