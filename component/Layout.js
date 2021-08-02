@@ -6,6 +6,7 @@ import {Container} from '@material-ui/core';
 
 const Layout = ({children}) => {
     const [isLogin, setLogin] = useState(false);
+    const [isValidated, setValidated] = useState(false);
 
     useEffect(() => {
         console.info('isLogin',isLogin);
@@ -19,7 +20,7 @@ const Layout = ({children}) => {
     // TODO: add props
     var componentChildren = cloneElement(
         children, 
-        { isLogin: isLogin }
+        { isLogin: isLogin, isValidated: isValidated }
     );
 
     const validateLogin = async () => {
@@ -30,9 +31,15 @@ const Layout = ({children}) => {
         if (validate.user) {
             // console.info("is",validate.user.isLoggedIn)
             setLogin(validate.user.isLoggedIn)
-            // return children.props.test = isLogin
+            if (validate.user.user) {
+                // const userId = validate.user.user[0].id;
+                // return children.props.test = isLogin
+                // children.props.blog = children.props.blog.filter(r => (r.userId === userId))
+                // console.info('current logged: ',children.props.blog);
+            }
         }
-        // setLoading(false);
+        console.info(children);
+        setValidated(true);
     }
     return (
         <>

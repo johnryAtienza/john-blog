@@ -17,12 +17,30 @@ const BlogList = ({blog, isLogin, refreshData}) => {
     const [open, setOpen] = useState(false);
     const [openPhoto, setOpenPhoto] = useState(false);
     const [expanded, setExpanded] = useState(false);
+    const [blogDetails, setBlogDetails] = useState(blog);
 
     useEffect(() => {
+        validate()
 
+       }, [isLogin])
+
+       const validate = async () => {
+        const res = await fetch("../api/validate")
+        const validate = await res.json()
+        // console.info('ss',isLogin)
+        if (validate.user.user) {
+            // TODO: filter show only his/her blog if the user is logged 
+        const userId = validate.user.user[0].id;
         console.info('Updated: ',blog)
-       
-       }, [])
+                       const newblog = blog.filter(r => (r.userId === userId))
+                console.info('current logged: ',blog);
+                setBlogDetails(newblog)
+            } else {
+                // TODO: list all if no user logged
+                setBlogDetails(blog)
+            }
+            
+       }
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -208,7 +226,7 @@ const BlogList = ({blog, isLogin, refreshData}) => {
                 message={msg}
                 key='Top Center'
             ></Snackbar>
-            {blog.map((i) => (<BlogRow viewDetails={viewDetails} isLogin={isLogin} key={i.id} blogItem={i} />))}
+            {blogDetails.map((i) => (<BlogRow viewDetails={viewDetails} isLogin={isLogin} key={i.id} blogItem={i} />))}
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"

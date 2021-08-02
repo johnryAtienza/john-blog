@@ -2,9 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useRouter } from 'next/router';
 import Meta from '../component/Meta'
 import BlogList from '../component/BlogList'
-import Image from 'next/image'
-
-export default function Blog({blog, isLogin}) {
+export default function Blog({blog, isLogin, isValidated}) {
   const router = useRouter();
   const refreshData = () => {
     router.replace(router.asPath);
@@ -13,7 +11,8 @@ export default function Blog({blog, isLogin}) {
     <div>
       <Meta />
       <h1>Blog List</h1>
-      <BlogList refreshData={refreshData} isLogin={isLogin} blog={blog}/>
+      {!isValidated && <div>Loading list...</div>}
+      {isValidated && <BlogList refreshData={refreshData} isLogin={isLogin} blog={blog}/>}
     </div>
   )
 }
@@ -21,7 +20,6 @@ export default function Blog({blog, isLogin}) {
 export const getStaticProps = async () => {
   const blogList = await fetch('https://fake-blog-server.herokuapp.com/blog');
   let blog = await blogList.json();
-  // console.info('>>>>',blog);
 
   const galleryList = await fetch('https://fake-blog-server.herokuapp.com/gallery');
   const gallery = await galleryList.json();
