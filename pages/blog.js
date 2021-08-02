@@ -2,17 +2,20 @@ import React, {useState, useEffect} from 'react';
 import { useRouter } from 'next/router';
 import Meta from '../component/Meta'
 import BlogList from '../component/BlogList'
-export default function Blog({blog, isLogin, isValidated}) {
+export default function Blog({blog, isLogin, isValidated, uDetails}) {
   const router = useRouter();
   const refreshData = () => {
     router.replace(router.asPath);
   }
+
+
   return (
     <div>
       <Meta />
       <h1>Blog List</h1>
+
       {!isValidated && <div>Loading list...</div>}
-      {isValidated && <BlogList refreshData={refreshData} isLogin={isLogin} blog={blog}/>}
+      {isValidated && <BlogList uDetails={uDetails} refreshData={refreshData} isLogin={isLogin} blog={blog}/>}
     </div>
   )
 }
@@ -34,6 +37,7 @@ export const getStaticProps = async () => {
         g.map(i => {let p = photos.filter(r => i.id === r.galleryId); i.photos = p});
         row.gallery = g;
     });
+    console.info("Loaded data: ", blog.length)
   return {
     props: {
       blog

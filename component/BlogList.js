@@ -5,9 +5,8 @@ import {Accordion, AccordionSummary, Typography, AccordionActions, AccordionDeta
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import Router from 'next/router';
-
-const BlogList = ({blog, isLogin, refreshData}) => {
+import AddIcon from '@material-ui/icons/Add';
+const BlogList = ({blog, isLogin, refreshData, uDetails}) => {
     const [showEdit, setShowEdit] = useState(false);
     const [loading, setLoading] = useState(false);
     const [details, setDetails] = useState({gallery:[]});
@@ -18,11 +17,21 @@ const BlogList = ({blog, isLogin, refreshData}) => {
     const [openPhoto, setOpenPhoto] = useState(false);
     const [expanded, setExpanded] = useState(false);
     const [blogDetails, setBlogDetails] = useState(blog);
+    const [userDetails, setUserDetails] = useState(uDetails);
 
     useEffect(() => {
         validate()
 
        }, [isLogin])
+
+    useEffect(() => {
+        // validate()
+        if (userDetails.id) {
+            const newblog = blog.filter(r => (r.userId === userDetails.id))
+            setBlogDetails(newblog)
+        }
+
+       }, [blog])
 
        const validate = async () => {
         const res = await fetch("../api/validate")
@@ -35,9 +44,13 @@ const BlogList = ({blog, isLogin, refreshData}) => {
                        const newblog = blog.filter(r => (r.userId === userId))
                 console.info('current logged: ',blog);
                 setBlogDetails(newblog)
+                setUserDetails(validate.user.user[0])
+            console.info("User details: ", userDetails)
             } else {
                 // TODO: list all if no user logged
                 setBlogDetails(blog)
+                setUserDetails({})
+                
             }
             
        }
@@ -66,7 +79,7 @@ const BlogList = ({blog, isLogin, refreshData}) => {
     const saveGallery = async (event) => {
         setLoading(true);
         event.preventDefault();
-        const p = {id: null, userId: details.userId, blogId: details.id, title: event.target.galleryName.value};
+        const p = {id: null, userId: userDetails.id, blogId: details.id, title: event.target.galleryName.value};
         const res = await fetch("../api/gallery", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -188,7 +201,7 @@ const BlogList = ({blog, isLogin, refreshData}) => {
     const doSaveBlog = async event => {
         setLoading(true);
         event.preventDefault();
-        const p = {id: details.id, userId: details.userId, title: event.target.title.value, body: event.target.body.value };
+        const p = {id: details.id, userId: userDetails.id, title: event.target.title.value, body: event.target.body.value };
         const res = await fetch("../api/blog", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -197,7 +210,7 @@ const BlogList = ({blog, isLogin, refreshData}) => {
 
         let result =  await res.json();
 
-        if (result.isUpdated) {
+        if (result.isUpdated || result.isAdded) {
             // TODO: update list
             refreshData();
 
@@ -213,8 +226,14 @@ const BlogList = ({blog, isLogin, refreshData}) => {
         setDetails(d)
         showEditModal();
     }
+
+    const showFormModal = () => {
+        setDetails({gallery:[]})
+        showEditModal()
+    }
     return (
         <div>
+            {/* {userDetails.fullname} */}
             <Snackbar
                 anchorOrigin={{
                     vertical: 'top',
@@ -226,6 +245,13 @@ const BlogList = ({blog, isLogin, refreshData}) => {
                 message={msg}
                 key='Top Center'
             ></Snackbar>
+            {isLogin && (
+                <div className={blogListStyle.header_button}>
+                    <IconButton aria-label="add blog" onClick={showFormModal}>
+                        <AddIcon fontSize="large" />
+                    </IconButton>
+                </div>
+            )}
             {blogDetails.map((i) => (<BlogRow viewDetails={viewDetails} isLogin={isLogin} key={i.id} blogItem={i} />))}
             <Modal
                 aria-labelledby="transition-modal-title"
@@ -267,48 +293,51 @@ const BlogList = ({blog, isLogin, refreshData}) => {
                                 maxRows={10}
                                 />
                         </div>
-                        <Divider variant="middle" />
-                                    <h2>Gallery</h2>
-                        {!details.gallery.length && <Button variant="outlined" color="primary" onClick={handleClickOpen} className={blogListStyle.gallery_button}>Add Gallery</Button>}
-                        <br/>
-                        {details.gallery.map( (gallery) => (
-                            <Accordion key={gallery.id} expanded={expanded === gallery.id} onChange={handleChange(gallery.id)}>
-                                <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1bh-content"
-                                id="panel1bh-header"
-                                >
-                                <Typography >{gallery.title}</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails  style={{maxWidth: 500, maxHeight:230, overflowX:'scroll'}}>
-                                {/* <Typography>
-                                    Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
-                                    maximus est, id dignissim quam.
-                                </Typography> */}
-                                <ImageList  cols={2} >
-                                    {gallery.photos.map((item) => (
-                                    <ImageListItem key={item.id} style={{maxWidth: 300}}>
-                                        <img src={item.thumbnailUrl} alt={item.title}/>
-                                        <ImageListItemBar
-                                        title={item.title}
-                                        
-                                        actionIcon={
-                                            <IconButton aria-label={`remove ${item.title}`} onClick={() => {removePhoto(item.id)}}>
-                                            <DeleteIcon />
-                                            </IconButton>
-                                        }
-                                        />
-                                    </ImageListItem>
-                                    ))}
-                                </ImageList>
-                                </AccordionDetails>
-                                <Divider />
-                                <AccordionActions>
-                                    <Button size="small" onClick={() => {handleClickOpenPhoto(details.galleryDetails)}}><AddCircleOutlineIcon/></Button>
-                            
-                                </AccordionActions>
-                            </Accordion>
-                        ))}
+                        {/* TODO: show only if edit */}
+                        {details.id && (<>
+                            <Divider variant="middle" />
+                                        <h2>Gallery</h2>
+                            {!details.gallery.length && <Button variant="outlined" color="primary" onClick={handleClickOpen} className={blogListStyle.gallery_button}>Add Gallery</Button>}
+                            <br/>
+                            {details.gallery.map( (gallery) => (
+                                <Accordion key={gallery.id} expanded={expanded === gallery.id} onChange={handleChange(gallery.id)}>
+                                    <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1bh-content"
+                                    id="panel1bh-header"
+                                    >
+                                    <Typography >{gallery.title}</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails  style={{maxWidth: 500, maxHeight:230, overflowX:'scroll'}}>
+                                    {/* <Typography>
+                                        Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
+                                        maximus est, id dignissim quam.
+                                    </Typography> */}
+                                    <ImageList  cols={2} >
+                                        {gallery.photos.map((item) => (
+                                        <ImageListItem key={item.id} style={{maxWidth: 300}}>
+                                            <img src={item.thumbnailUrl} alt={item.title}/>
+                                            <ImageListItemBar
+                                            title={item.title}
+                                            
+                                            actionIcon={
+                                                <IconButton aria-label={`remove ${item.title}`} onClick={() => {removePhoto(item.id)}}>
+                                                <DeleteIcon />
+                                                </IconButton>
+                                            }
+                                            />
+                                        </ImageListItem>
+                                        ))}
+                                    </ImageList>
+                                    </AccordionDetails>
+                                    <Divider />
+                                    <AccordionActions>
+                                        <Button size="small" onClick={() => {handleClickOpenPhoto(details.galleryDetails)}}><AddCircleOutlineIcon/></Button>
+                                
+                                    </AccordionActions>
+                                </Accordion>
+                            ))}
+                        </>)}
                         {/* <div className={blogListStyle.login_field}>
                             <TextField
                                 required

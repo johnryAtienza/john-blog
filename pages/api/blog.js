@@ -5,7 +5,7 @@ const blog = async (req, res) => {
 
    
     const remover = async (req, res) => {
-        const r = await fetch('https://fake-blog-server.herokuapp.com/blog/10', {
+        const r = await fetch('https://fake-blog-server.herokuapp.com/blog/7', {
             method: 'DELETE',
             headers: {
                 //     "Content-Type": "application/x-www-form-urlencoded",
