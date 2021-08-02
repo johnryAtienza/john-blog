@@ -1,14 +1,19 @@
 import React, {useState, useEffect} from 'react';
+import { useRouter } from 'next/router';
 import Meta from '../component/Meta'
 import BlogList from '../component/BlogList'
 import Image from 'next/image'
 
 export default function Blog({blog, isLogin}) {
+  const router = useRouter();
+  const refreshData = () => {
+    router.replace(router.asPath);
+  }
   return (
     <div>
       <Meta />
       <h1>Blog List</h1>
-      <BlogList isLogin={isLogin} blog={blog}/>
+      <BlogList refreshData={refreshData} isLogin={isLogin} blog={blog}/>
     </div>
   )
 }
@@ -25,7 +30,7 @@ export const getStaticProps = async () => {
   const photos = await photoList.json();
     // TODO: construct blog
     blog.map((row) => {
-        let g = gallery.filter(r => row.id === r.userId);
+        let g = gallery.filter(r => row.id === r.blogId);
         // console.info('Gallery', g)
         g.map(i => {let p = photos.filter(r => i.id === r.galleryId); i.photos = p});
         row.gallery = g;

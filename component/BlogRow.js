@@ -1,21 +1,11 @@
 // import Link from 'next/link'
 import React, {useState} from 'react';
 import blogListStyle from '../styles/BlogList.module.scss'
-import {Grid, Paper, Typography, ButtonBase, Link, IconButton, Backdrop, CircularProgress, Modal, Fade, TextField, Button} from '@material-ui/core';
+import {Grid, Paper, Typography, ButtonBase, Link, IconButton} from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-const BlogRow = ({blogItem, isLogin}) => {
+const BlogRow = ({blogItem, isLogin, viewDetails}) => {
     // console.info('@@@@', blogItem)
-    const [showEdit, setShowEdit] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const showEditModal = () => {
-        setShowEdit(true)
-    }
-    const hideEditModal = () => {
-        setShowEdit(false)
-    }
-    const doSaveBlog = event => {
-        event.preventDefault();
-    }
+    const noImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_1jx9qlGd7Sa2fu4OmG39Ygg3O3g31UWsRonvUoXhnxGXtYqd1qavX3lhTs1PhO2eWFI&usqp=CAU'
     return (
         <div className={blogListStyle.blog_list}>
 
@@ -23,7 +13,7 @@ const BlogRow = ({blogItem, isLogin}) => {
                 <Grid container spacing={2}>
                     <Grid item>
                         <ButtonBase className={blogListStyle.image}>
-                            <img className={blogListStyle.img} alt="complex" src="https://lokeshdhakar.com/projects/lightbox2/images/image-4.jpg" />
+                            <img className={blogListStyle.img} alt="complex" src={blogItem.gallery[0] && blogItem.gallery[0].photos ? blogItem.gallery[0].photos[0].thumbnailUrl : noImage} />
                         </ButtonBase>
                     </Grid>
                     <Grid item xs={12} sm container>
@@ -50,66 +40,12 @@ const BlogRow = ({blogItem, isLogin}) => {
                         <Grid item>
                             {/* <Typography variant="subtitle1">$19.00</Typography>
                              */}
-                             {isLogin &&  <IconButton aria-label="edit" onClick={showEditModal}> <EditIcon /> </IconButton> }
+                             {isLogin &&  <IconButton aria-label="edit" onClick={() => {viewDetails(blogItem)}}> <EditIcon /> </IconButton> }
                         </Grid>
                     </Grid>
                 </Grid>
             </Paper>
-            <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                className={blogListStyle.modal}
-                open={showEdit}
-                onClose={hideEditModal}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                timeout: 500,
-                }}
-            >
-                <Fade in={showEdit}>
-                <div className={blogListStyle.paper}>
-                    <h3>Blog</h3>
-                    <form noValidate autoComplete="off" onSubmit={doSaveBlog}>
-                        <div className={blogListStyle.login_field}>
-                            <TextField
-                                required
-                                id="outlined-fullname-required"
-                                label="Full Name"
-                                variant="outlined"
-                                name="fname"
-                                />
-                        </div>
-                        <div className={blogListStyle.login_field}>
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label="Email"
-                                variant="outlined"
-                                name="email"
-                                />
-                        </div>
-                        
-                        <div className={blogListStyle.login_field}>
-                            <TextField
-                                required
-                                id="outlined-password-input"
-                                label="Password"
-                                type="password"
-                                autoComplete="current-password"
-                                variant="outlined"
-                                name="password"
-                                />
-                        </div>
-                        <div>
-                            <Button type="submit" disabled={loading} variant="contained" color="primary" className={blogListStyle.submit_button} disableElevation>
-                                {loading ? <CircularProgress size={24}/> : 'Register'}
-                            </Button>
-                        </div>
-                    </form>
-                </div>
-                </Fade>
-            </Modal>
+            
         </div>
     )
 }

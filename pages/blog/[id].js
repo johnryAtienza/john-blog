@@ -5,7 +5,7 @@ export const getServerSideProps = async (context) => {
     const res = await fetch(`https://fake-blog-server.herokuapp.com/blog/${context.params.id}`);
     const details = await res.json();
 
-    const galleryList = await fetch(`https://fake-blog-server.herokuapp.com/gallery?userId=${context.params.id}`);
+    const galleryList = await fetch(`https://fake-blog-server.herokuapp.com/gallery?blogId=${context.params.id}`);
     const gallery = await galleryList.json();
     let queryParam = '';
     gallery.map((row) => queryParam += queryParam.length ? '&galleryId=' + row.id : '?galleryId=' + row.id)

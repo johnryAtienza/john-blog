@@ -3,8 +3,10 @@ import { withIronSession } from "next-iron-session";
 import navStyles from '../styles/Nav.module.scss'
 import { Link, AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Modal, Backdrop, Fade, TextField, Snackbar, CircularProgress, LinearProgress } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import Router from 'next/router';
 
 const Nav = ({validationChecker, isLogin}) => {
+
 
     const [open, setOpen] = useState(false);
     const [openRegister, setOpenRegister] = useState(false);
@@ -15,6 +17,11 @@ const Nav = ({validationChecker, isLogin}) => {
     const [openSnack, setOpenSnack] = useState(false);
     const [msg, setMsg] = useState("Invalid Username or password");
     
+    // TODO: show loader
+    Router.events.on('routeChangeStart', () => {setLoadingLinear(true)}); 
+    Router.events.on('routeChangeComplete', () => setLoadingLinear(false)); 
+    Router.events.on('routeChangeError', () => setLoadingLinear(false));  
+
     const handleClick = (event) => {
         // this.setState()
         setAnchorEl(event.currentTarget);
