@@ -47,3 +47,6 @@ HEROKU server
 MATERIAL-UI
 React components for faster and easier web development. Build your own design system, or start with Material Design.
 [https://material-ui.com/](https://material-ui.com/)
+
+## Production
+[https://nextjs-exam.herokuapp.com/](https://nextjs-exam.herokuapp.com/) | [https://git.heroku.com/nextjs-exam.git](https://git.heroku.com/nextjs-exam.git)
