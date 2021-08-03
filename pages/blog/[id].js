@@ -29,7 +29,9 @@ const BlogDetails = ({details, gallery}) => {
     
     return (
         <div className={singleStyle.blog_details}>
-            {(gallery.length > 0 && gallery[0].images.length > 0 ) ? <Image className={singleStyle.single_image}  layout="fill" src={gallery[0].images[0].url} alt={gallery[0].images[0].title} /> : '' }
+            <div className={singleStyle.blog_image_container}>
+                {(gallery.length > 0 && gallery[0].images.length > 0 ) ? <Image className={singleStyle.single_image} width={600} height={600} src={gallery[0].images[0].url} alt={gallery[0].images[0].title} /> : '' }
+            </div>
             <h1 className={singleStyle.title}>{details.title}</h1>
             <p className={singleStyle.body}>{details.body}</p>
             <br/>
