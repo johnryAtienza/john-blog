@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
+import loadable from '@loadable/component'
 import blogListStyle from '../styles/BlogList.module.scss'
-import BlogRow from './BlogRow'
+// import BlogRow from './BlogRow'
 import Image from 'next/image'
 import {Accordion, AccordionSummary, Typography, AccordionActions, AccordionDetails, Backdrop, CircularProgress, Modal, Fade, TextField, Button, Snackbar, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ImageList, ImageListItem, ImageListItemBar, IconButton} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import AddIcon from '@material-ui/icons/Add';
+
+const BlogRow = loadable(() => import('./BlogRow'))
+
 const BlogList = ({blog, isLogin, refreshData, uDetails}) => {
     const [showEdit, setShowEdit] = useState(false);
     const [loading, setLoading] = useState(false);

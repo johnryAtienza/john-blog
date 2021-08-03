@@ -1,8 +1,10 @@
 import React, {useState, useEffect, cloneElement} from 'react';
-import styles from '../styles/Layout.module.css'
+import loadable from '@loadable/component'
 import Header from './Header'
-import Nav from './Nav'
-import {Container} from '@material-ui/core';
+// import Nav from './Nav'
+import {Container, LinearProgress} from '@material-ui/core';
+
+const Nav = loadable(() => import('./Nav'))
 
 const Layout = ({children}) => {
     const [isLogin, setLogin] = useState(false);
@@ -46,7 +48,7 @@ const Layout = ({children}) => {
     }
     return (
         <>
-            <Nav validationChecker={validateLogin} isLogin={isLogin}/>
+            <Nav validationChecker={validateLogin} isLogin={isLogin} fallback={<LinearProgress />}/>
             <Container maxWidth="lg">
                 <main>
                     <Header />

@@ -1,6 +1,7 @@
 import singleStyle from '../../styles/Single.module.scss'
 import Image from 'next/image'
-import {ImageList, ImageListItem, ImageListItemBar, ListSubheader, IconButton, Link} from '@material-ui/core';
+import {ImageList, ImageListItem, ImageListItemBar, ListSubheader, Link} from '@material-ui/core';
+
 export const getServerSideProps = async (context) => {
     const res = await fetch(`https://fake-blog-server.herokuapp.com/blog/${context.params.id}`);
     const details = await res.json();

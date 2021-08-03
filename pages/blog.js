@@ -1,7 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
+import loadable from '@loadable/component'
 import { useRouter } from 'next/router';
 import Meta from '../component/Meta'
-import BlogList from '../component/BlogList'
+import {CircularProgress } from '@material-ui/core';
+// import BlogList from '../component/BlogList'
+
+const BlogList = loadable(() => import('../component/BlogList'))
+
 export default function Blog({blog, isLogin, isValidated, uDetails}) {
   const router = useRouter();
   const refreshData = () => {
@@ -14,8 +19,7 @@ export default function Blog({blog, isLogin, isValidated, uDetails}) {
       <Meta />
       <h1>Blog List</h1>
 
-      {!isValidated && <div>Loading list...</div>}
-      {isValidated && <BlogList uDetails={uDetails} refreshData={refreshData} isLogin={isLogin} blog={blog}/>}
+      <BlogList uDetails={uDetails} refreshData={refreshData} isLogin={isLogin} blog={blog} fallback={<CircularProgress />}/>
     </div>
   )
 }

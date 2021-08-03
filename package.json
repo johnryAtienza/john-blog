@@ -13,6 +13,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@loadable/component": "^5.15.0",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "next": "11.0.1",
