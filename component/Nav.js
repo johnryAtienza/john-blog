@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from 'react';
-import { withIronSession } from "next-iron-session";
+import React, {useState} from 'react';
 import navStyles from '../styles/Nav.module.scss'
 import { Link, AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Modal, Backdrop, Fade, TextField, Snackbar, CircularProgress, LinearProgress } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';

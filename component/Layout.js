@@ -8,7 +8,6 @@ const Nav = loadable(() => import('./Nav'))
 
 const Layout = ({children}) => {
     const [isLogin, setLogin] = useState(false);
-    const [isValidated, setValidated] = useState(false);
     const [uDetails, setUDetails] = useState({});
 
     useEffect(() => {
@@ -23,7 +22,7 @@ const Layout = ({children}) => {
     // TODO: add props
     var componentChildren = cloneElement(
         children, 
-        { isLogin: isLogin, isValidated: isValidated, uDetails: uDetails }
+        { isLogin: isLogin, uDetails: uDetails }
     );
 
     const validateLogin = async () => {
@@ -44,7 +43,6 @@ const Layout = ({children}) => {
             }
         }
         console.info(children);
-        setValidated(true);
     }
     return (
         <>
