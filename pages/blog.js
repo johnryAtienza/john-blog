@@ -1,4 +1,3 @@
-import React from 'react';
 import loadable from '@loadable/component'
 import { useRouter } from 'next/router';
 import Meta from '../component/Meta'
@@ -7,7 +6,7 @@ import {CircularProgress } from '@material-ui/core';
 
 const BlogList = loadable(() => import('../component/BlogList'))
 
-export default function Blog({blog, isLogin, isValidated, uDetails}) {
+export default function Blog({blog, isLogin, uDetails}) {
   const router = useRouter();
   const refreshData = () => {
     router.replace(router.asPath);

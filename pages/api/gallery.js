@@ -1,27 +1,4 @@
-import React from 'react'
-// import { Low, JSONFile } from 'lowdb'
-
 const gallery = async (req, res) => {
-
-   
-    const remover = async (req, res) => {
-        const r = await fetch('https://fake-blog-server.herokuapp.com/gallery/3', {
-            method: 'DELETE',
-            headers: {
-                //     "Content-Type": "application/x-www-form-urlencoded",
-                //     // "Content-Type": "multipart/form-data",
-                'Content-Type': 'application/json'
-                }
-        })
-
-        console.info('Save data: ',await r.json())
-        res.send({message: 'User has been deleted.', registered: true})
-    }
-    // reg()
-    // remover(req, res);return
-
-    
-    
 
     const { data } = await req.body;
 // console.info("data:",data)
