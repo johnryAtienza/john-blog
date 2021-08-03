@@ -3,9 +3,10 @@ import React, {useState} from 'react';
 import blogListStyle from '../styles/BlogList.module.scss'
 import {Grid, Paper, Typography, ButtonBase, Link, IconButton} from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
+import Image from 'next/image'
 const BlogRow = ({blogItem, isLogin, viewDetails}) => {
     // console.info('@@@@', blogItem)
-    const noImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_1jx9qlGd7Sa2fu4OmG39Ygg3O3g31UWsRonvUoXhnxGXtYqd1qavX3lhTs1PhO2eWFI&usqp=CAU'
+    const noImage = 'https://via.placeholder.com/600x600.png?text=No%20Image'
     return (
         <div className={blogListStyle.blog_list}>
 
@@ -13,7 +14,7 @@ const BlogRow = ({blogItem, isLogin, viewDetails}) => {
                 <Grid container spacing={2}>
                     <Grid item>
                         <ButtonBase className={blogListStyle.image}>
-                            <img className={blogListStyle.img} alt="complex" src={blogItem.gallery[0] && blogItem.gallery[0].photos[0] ? blogItem.gallery[0].photos[0].thumbnailUrl : noImage} />
+                            <Image className={blogListStyle.img} alt="complex"  layout="fill" src={blogItem.gallery[0] && blogItem.gallery[0].photos[0] ? blogItem.gallery[0].photos[0].thumbnailUrl : noImage} />
                         </ButtonBase>
                     </Grid>
                     <Grid item xs={12} sm container>

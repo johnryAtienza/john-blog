@@ -1,4 +1,5 @@
 import singleStyle from '../../styles/Single.module.scss'
+import Image from 'next/image'
 import {ImageList, ImageListItem, ImageListItemBar, ListSubheader, IconButton, Link} from '@material-ui/core';
 export const getServerSideProps = async (context) => {
     const res = await fetch(`https://fake-blog-server.herokuapp.com/blog/${context.params.id}`);
@@ -28,7 +29,7 @@ const BlogDetails = ({details, gallery}) => {
     
     return (
         <div className={singleStyle.blog_details}>
-            {(gallery.length > 0 && gallery[0].images.length > 0 ) ? <img className={singleStyle.single_image} src={gallery[0].images[0].url} alt={gallery[0].images[0].title} /> : '' }
+            {(gallery.length > 0 && gallery[0].images.length > 0 ) ? <Image className={singleStyle.single_image}  layout="fill" src={gallery[0].images[0].url} alt={gallery[0].images[0].title} /> : '' }
             <h1 className={singleStyle.title}>{details.title}</h1>
             <p className={singleStyle.body}>{details.body}</p>
             <br/>
@@ -41,7 +42,7 @@ const BlogDetails = ({details, gallery}) => {
                     </ImageListItem>
                     {g.images.map((item) => (
                     <ImageListItem key={item.id}>
-                        <img src={item.url} alt={item.title} />
+                        <Image src={item.url} alt={item.title}  layout="fill"/>
                         <ImageListItemBar
                         title={item.title}
                         subtitle={<span>by: Johnry</span>}

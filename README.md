@@ -50,3 +50,6 @@ React components for faster and easier web development. Build your own design sy
 
 ## Production
 [https://nextjs-exam.herokuapp.com/](https://nextjs-exam.herokuapp.com/) | [https://git.heroku.com/nextjs-exam.git](https://git.heroku.com/nextjs-exam.git)
+
+## Placeholder photos
+This app is strickly use image from [https://placeholder.com/](https://placeholder.com/)

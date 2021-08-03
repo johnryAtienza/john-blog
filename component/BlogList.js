@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import blogListStyle from '../styles/BlogList.module.scss'
 import BlogRow from './BlogRow'
+import Image from 'next/image'
 import {Accordion, AccordionSummary, Typography, AccordionActions, AccordionDetails, Backdrop, CircularProgress, Modal, Fade, TextField, Button, Snackbar, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ImageList, ImageListItem, ImageListItemBar, IconButton} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -316,7 +317,7 @@ const BlogList = ({blog, isLogin, refreshData, uDetails}) => {
                                     <ImageList  cols={2} >
                                         {gallery.photos.map((item) => (
                                         <ImageListItem key={item.id} style={{maxWidth: 300}}>
-                                            <img src={item.thumbnailUrl} alt={item.title}/>
+                                            <Image src={item.thumbnailUrl} alt={item.title} layout="fill"/>
                                             <ImageListItemBar
                                             title={item.title}
                                             
